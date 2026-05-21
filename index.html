@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>지우의 연구노트</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">
+        <span></span><span></span><span></span>
+      </button>
+      <h1 class="site-title">지우의 연구노트</h1>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="검색..." />
+      </div>
+      <button class="write-btn" id="openWriteBtn">✏️ 글쓰기</button>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-title">카테고리</div>
+      <ul class="sidebar-cats">
+        <li data-cat="전체" class="active">📋 전체</li>
+        <li data-cat="화학">⚗️ 화학</li>
+        <li data-cat="물리학">⚛️ 물리학</li>
+        <li data-cat="수학">📐 수학</li>
+        <li data-cat="생물">🌿 생물</li>
+        <li data-cat="기타">📌 기타</li>
+      </ul>
+      <div class="sidebar-title" style="margin-top:2rem;">인기 태그</div>
+      <div class="sidebar-tags" id="sidebarTags"></div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- MAIN -->
+  <main class="main" id="main">
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-sort="latest">최신순</button>
+      <button class="filter-btn" data-sort="upload">업로드순</button>
+      <div class="active-tag-filter" id="activeTagFilter"></div>
+    </div>
+
+    <!-- CATEGORY CHIPS -->
+    <div class="cat-chips" id="catChips">
+      <button class="cat-chip active" data-cat="전체">전체</button>
+      <button class="cat-chip" data-cat="화학">화학</button>
+      <button class="cat-chip" data-cat="물리학">물리학</button>
+      <button class="cat-chip" data-cat="수학">수학</button>
+      <button class="cat-chip" data-cat="생물">생물</button>
+      <button class="cat-chip" data-cat="기타">기타</button>
+    </div>
+
+    <!-- POSTS GRID -->
+    <div class="posts-grid" id="postsGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div class="empty-icon">🔬</div>
+      <p>아직 글이 없어요. 첫 번째 연구노트를 작성해보세요!</p>
+    </div>
+  </main>
+
+  <!-- WRITE MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="writeModal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">새 연구노트 작성</h2>
+        <button class="modal-close" id="closeWriteBtn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>제목 *</label>
+          <input type="text" id="postTitle" placeholder="연구노트 제목을 입력하세요" maxlength="60" />
+        </div>
+        <div class="field">
+          <label>카테고리</label>
+          <select id="postCat">
+            <option value="화학">화학</option>
+            <option value="물리학">물리학</option>
+            <option value="수학">수학</option>
+            <option value="생물">생물</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>대표 이미지 (선택)</label>
+          <div class="img-upload-box" id="imgUploadBox">
+            <input type="file" id="imgInput" accept="image/*" style="display:none" />
+            <div class="img-placeholder" id="imgPlaceholder">
+              <span>🖼️</span>
+              <span>이미지를 업로드하세요</span>
+            </div>
+            <img id="imgPreview" class="img-preview" style="display:none" />
+            <button class="img-remove-btn" id="imgRemoveBtn" style="display:none">✕</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>내용 *</label>
+          <textarea id="postContent" placeholder="연구 내용을 자유롭게 작성하세요..." rows="8"></textarea>
+        </div>
+        <div class="field">
+          <label>해시태그</label>
+          <div class="tag-input-wrap">
+            <input type="text" id="tagInput" placeholder="#태그를 입력 후 Enter" />
+            <div class="tag-list" id="tagList"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="cancelBtn">취소</button>
+        <button class="btn-save" id="saveBtn">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST DETAIL MODAL -->
+  <div class="modal-overlay" id="detailOverlay">
+    <div class="modal modal-detail" id="detailModal">
+      <div class="modal-header">
+        <button class="modal-close" id="closeDetailBtn">✕</button>
+      </div>
+      <div class="detail-body" id="detailBody"></div>
+      <div class="detail-actions">
+        <button class="btn-edit" id="editBtn">✏️ 수정</button>
+        <button class="btn-delete" id="deleteBtn">🗑️ 삭제</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
